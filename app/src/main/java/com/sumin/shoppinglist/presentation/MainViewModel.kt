@@ -1,7 +1,5 @@
 package com.sumin.shoppinglist.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sumin.shoppinglist.data.ShopListRepositoryImpl
 import com.sumin.shoppinglist.domain.DeleteShopItemUseCase
@@ -17,11 +15,16 @@ class MainViewModel : ViewModel() {
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
     private val editShopItemUseCase = EditShopItemUseCase(repository)
 
-    var shopList = MutableLiveData<List<ShopItem>>()
+    var shopList = getShopListUseCase.getShopList()
 
-    fun getShopList() {
-        val list = getShopListUseCase.getShopList()
-        shopList.value = list // в любом месте патока можно использовать postValue
+
+    fun deleteShopItem(shopItem: ShopItem) {
+        deleteShopItemUseCase.deleteShopItem(shopItem)
+    }
+
+    fun changeEnabledState(shopItem: ShopItem) {
+        val newItem = shopItem.copy(enable = !shopItem.enable)
+        editShopItemUseCase.editShopItem(newItem)
 
     }
 }
